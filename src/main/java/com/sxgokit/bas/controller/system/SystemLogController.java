@@ -44,13 +44,13 @@ public class SystemLogController extends BaseController {
 
     @ApiOperation(value = "获取系统日志详情", notes = "通过系统日志表id获取系统日志详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemLogDTO> getById(@ApiParam(value = "系统日志表ID", required = true) long id){
+    public ResultBody<SystemLogDTO> getById(@ApiParam(value = "系统日志表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemLogService.getById(id));
     }
 
     @ApiOperation("删除系统日志信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "系统日志表ID", required = true) long id){
+    public ResultBody delete(@ApiParam(value = "系统日志表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemLogService.removeById(id));
     }
 }

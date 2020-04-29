@@ -44,13 +44,13 @@ public class SystemRoleController extends BaseController {
 
     @ApiOperation(value = "获取系统角色详情", notes = "通过系统角色表id获取系统角色详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemRoleDTO> getById(@ApiParam(value = "系统角色表ID", required = true) long id){
+    public ResultBody<SystemRoleDTO> getById(@ApiParam(value = "系统角色表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemRoleService.getById(id));
     }
 
     @ApiOperation("删除系统角色信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "系统角色表ID", required = true) long id){
+    public ResultBody delete(@ApiParam(value = "系统角色表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemRoleService.removeById(id));
     }
 }

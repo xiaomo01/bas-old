@@ -44,13 +44,13 @@ public class SystemConfigController extends BaseController {
 
     @ApiOperation(value = "获取系统配置详情", notes = "通过系统配置表id获取系统配置详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemConfigDTO> getById(@ApiParam(value = "系统配置表ID", required = true) long id){
+    public ResultBody<SystemConfigDTO> getById(@ApiParam(value = "系统配置表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemConfigService.getById(id));
     }
 
     @ApiOperation("删除系统配置信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "系统配置表ID", required = true) long id){
+    public ResultBody delete(@ApiParam(value = "系统配置表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemConfigService.removeById(id));
     }
 }

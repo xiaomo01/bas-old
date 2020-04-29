@@ -44,13 +44,13 @@ public class SystemDictionaryController extends BaseController {
 
     @ApiOperation(value = "获取数据字典详情", notes = "通过数据字典表id获取数据字典详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemDictionaryDTO> getById(@ApiParam(value = "数据字典表ID", required = true) long id){
+    public ResultBody<SystemDictionaryDTO> getById(@ApiParam(value = "数据字典表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemDictionaryService.getById(id));
     }
 
     @ApiOperation("删除数据字典信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "数据字典表ID", required = true) long id){
+    public ResultBody delete(@ApiParam(value = "数据字典表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemDictionaryService.removeById(id));
     }
 }

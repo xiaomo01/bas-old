@@ -48,13 +48,13 @@ public class SystemPermissionController extends BaseController {
 
     @ApiOperation(value = "获取权限详情", notes = "通过权限表id获取权限详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemPermissionDTO> getById(@ApiParam(value = "权限表ID", required = true) long id) {
+    public ResultBody<SystemPermissionDTO> getById(@ApiParam(value = "权限表ID", required = true)@PathVariable long id) {
         return ResultBody.success(systemPermissionService.getById(id));
     }
 
     @ApiOperation("删除权限信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "权限表ID", required = true) long id) {
+    public ResultBody delete(@ApiParam(value = "权限表ID", required = true)@PathVariable long id) {
         return ResultBody.success(systemPermissionService.removeById(id));
     }
 }

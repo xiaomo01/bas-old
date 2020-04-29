@@ -47,13 +47,13 @@ public class CommonRegionInfoController extends BaseController {
 
     @ApiOperation(value = "获取行政区划详情", notes = "通过行政区划表id获取行政区划详情")
     @PostMapping(value = "/getById")
-    public ResultBody<CommonRegionInfoDTO> getById(@ApiParam(value = "行政区划表ID", required = true) long id) {
+    public ResultBody<CommonRegionInfoDTO> getById(@ApiParam(value = "行政区划表ID", required = true)@PathVariable long id) {
         return ResultBody.success(commonRegionInfoService.getById(id));
     }
 
     @ApiOperation("删除行政区划信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "行政区划表ID", required = true) long id) {
+    public ResultBody delete(@ApiParam(value = "行政区划表ID", required = true)@PathVariable long id) {
         return ResultBody.success(commonRegionInfoService.removeById(id));
     }
 }

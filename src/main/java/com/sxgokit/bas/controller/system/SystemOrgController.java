@@ -48,13 +48,13 @@ public class SystemOrgController extends BaseController {
 
     @ApiOperation(value = "获取组织机构详情", notes = "通过组织机构表id获取组织机构详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemOrgDTO> getById(@ApiParam(value = "组织机构表ID", required = true) long id) {
+    public ResultBody<SystemOrgDTO> getById(@ApiParam(value = "组织机构表ID", required = true)@PathVariable long id) {
         return ResultBody.success(systemOrgService.getById(id));
     }
 
     @ApiOperation("删除组织机构信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "组织机构表ID", required = true) long id) {
+    public ResultBody delete(@ApiParam(value = "组织机构表ID", required = true)@PathVariable long id) {
         return ResultBody.success(systemOrgService.removeById(id));
     }
 }

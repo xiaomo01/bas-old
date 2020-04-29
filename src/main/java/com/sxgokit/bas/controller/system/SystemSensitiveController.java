@@ -44,13 +44,13 @@ public class SystemSensitiveController extends BaseController {
 
     @ApiOperation(value = "获取敏感词详情", notes = "通过敏感词表id获取敏感词详情")
     @PostMapping(value = "/getById")
-    public ResultBody<SystemSensitiveDTO> getById(@ApiParam(value = "敏感词表ID", required = true) long id){
+    public ResultBody<SystemSensitiveDTO> getById(@ApiParam(value = "敏感词表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemSensitiveService.getById(id));
     }
 
     @ApiOperation("删除敏感词信息")
     @PostMapping("/delete")
-    public ResultBody delete(@ApiParam(value = "敏感词表ID", required = true) long id){
+    public ResultBody delete(@ApiParam(value = "敏感词表ID", required = true)@PathVariable long id){
         return ResultBody.success(systemSensitiveService.removeById(id));
     }
 }
