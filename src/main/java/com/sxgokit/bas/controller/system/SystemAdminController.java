@@ -48,22 +48,4 @@ public class SystemAdminController extends BaseController {
     public ResultBody save(@RequestBody @ApiParam(name="管理员用户对象",value="传入json格式",required=true) SystemAdminDTO dto) throws Exception{
         return ResultBody.success(systemAdminService.saveAdminInfo(dto));
     }
-
-    @ApiOperation(value = "用户登录", notes = "系统用户登录")
-    @PostMapping(value = "/login")
-    public ResultBody<String> login(
-            @ApiParam(name = "loginName", value = "用户登录名称", required = true) @RequestParam(required = true) String loginName
-            , @ApiParam(name = "loginPass", value = "用户登录密码", required = true) @RequestParam(required = true) String loginPass) {
-        SystemAdminDTO dto = SystemAdminDTO.builder()
-                .loginName(loginName)
-                .loginPass(DataPool.passEncryption(loginPass))
-                .adminState(1)//数据字典标识，待处理
-                .build();
-        SystemAdminDTO model = systemAdminService.login(dto);
-        String result = "fail";
-        if(model != null){
-            result = "success";
-        }
-        return ResultBody.success(result);
-    }
 }

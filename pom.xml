@@ -121,6 +121,19 @@
             <optional>true</optional>
         </dependency>
         <!-- devtools end-->
+        <!-- spring security 框架安全认证服务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- spring security end -->
+        <!-- jwt 用户认证与授权 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <!-- jwt end -->
 
     </dependencies>
     <build>
