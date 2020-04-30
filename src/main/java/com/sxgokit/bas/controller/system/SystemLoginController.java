@@ -1,17 +1,19 @@
 package com.sxgokit.bas.controller.system;
 
+import cn.hutool.json.JSONObject;
+import com.sxgokit.bas.base.DataPool;
 import com.sxgokit.bas.base.ResultBody;
+import com.sxgokit.bas.base.TokenComponent;
 import com.sxgokit.bas.controller.BaseController;
-import com.sxgokit.bas.security.JwtTokenUtil;
+import com.sxgokit.bas.entity.dto.system.SystemAdminDTO;
 import com.sxgokit.bas.service.system.SystemAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * @author wgl
@@ -25,40 +27,30 @@ import org.springframework.web.bind.annotation.*;
 public class SystemLoginController extends BaseController {
 
     @Autowired
-    @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     private SystemAdminService systemAdminService;
 
-    /*@ApiOperation(value = "用户登录", notes = "系统用户登录")
-    @PostMapping(value = "/login")
+    @Resource
+    private TokenComponent tokenComponent;
+
+    @ApiOperation(value = "用户登录", notes = "系统用户登录")
+    @PostMapping(value = "/",consumes = "application/x-www-form-urlencoded")
     public ResultBody<String> login(
-            @ApiParam(name = "loginName", value = "用户登录名称", required = true) @RequestParam(required = true) String loginName
-            , @ApiParam(name = "loginPass", value = "用户登录密码", required = true) @RequestParam(required = true) String loginPass) {
+            @ApiParam(name = "loginName", value = "用户登录名称", required = true)@RequestParam String loginName
+            , @ApiParam(name = "loginPass", value = "用户登录密码", required = true)@RequestParam String loginPass) {
         SystemAdminDTO dto = SystemAdminDTO.builder()
                 .loginName(loginName)
                 .loginPass(DataPool.passEncryption(loginPass))
                 .adminState(1)//数据字典标识，待处理
                 .build();
         SystemAdminDTO model = systemAdminService.login(dto);
-        String result = "fail";
-        if(model != null){
-            result = "success";
+        if(model == null){
+            return ResultBody.error("登录失败！请重新验证用户名与密码！");
+        }else{
+            JSONObject json = new JSONObject();
+            String token = tokenComponent.createToken(model);
+            json.put("token",token) ;
+            return ResultBody.success(json);
         }
-        return ResultBody.success(result);
-    }*/
-
-    @ApiOperation(value = "用户登录", notes = "系统用户登录")
-    @PostMapping("/login")
-    public ResultBody<String> login(@ApiParam(name = "loginName", value = "用户登录名称", required = true) @RequestParam(required = true) String loginName){
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginName);
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        
-        return ResultBody.success(token);
     }
 
 }

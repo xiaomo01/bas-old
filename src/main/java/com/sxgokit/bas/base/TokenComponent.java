@@ -3,15 +3,20 @@ package com.sxgokit.bas.base;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.sxgokit.bas.entity.dto.system.SystemAdminDTO;
 import com.sxgokit.bas.util.redis.RedisUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * Author: token容器
@@ -19,18 +24,60 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 @Slf4j
+@ConfigurationProperties(prefix = "jwt")
+@Data
 public class TokenComponent {
 
-    //暂未使用,如需对时间有要求请自行完成时间判断
-    @Value("${app.token-alive-time}")
-    private int tokenAliveTime = 7200;
+    private String secret;
+
+    private long expire;
+
+    private String header;
+
     @Autowired
     private RedisUtil redisUtil;
 
-    public String createToken(SystemAdminDTO model) {
-        String token = DigestUtil.md5Hex(model.getId() + RandomStringUtils.randomAscii(10));
-        redisUtil.set(token, model, tokenAliveTime);
+    /**
+     * 根据用户ID创建token
+     * @param identityId
+     * @return
+     */
+    public String createToken(SystemAdminDTO adminDTO) {
+        Date nowDate = new Date();
+        //过期时间
+        Date expireDate = new Date(nowDate.getTime() + expire * 1000);
+        String token = Jwts.builder()
+                .setHeaderParam("type", "JWT")
+                .setSubject(adminDTO.getId().toString())
+                .setIssuedAt(nowDate)
+                .setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+        redisUtil.set(token, adminDTO, expire);
         return token;
+    }
+
+    /**
+     * 获取 Token 中注册信息
+     * @param token
+     * @return
+     */
+    public Claims getTokenClaim (String token) {
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Token 过期验证
+     * @param expirationTime
+     * @return
+     */
+    public boolean isTokenExpired (Date expirationTime) {
+        return expirationTime.before(new Date());
     }
 
     public boolean checkToken(String token) {
@@ -47,8 +94,7 @@ public class TokenComponent {
         if (StringUtils.isEmpty(token)) {
             return;
         }
-        redisUtil.set(token, redisUtil.get(token) , tokenAliveTime);
-//        log.debug("token alive time is : {}M", tokenAliveTime);
+        redisUtil.set(token, redisUtil.get(token) , expire);
     }
 
     /**
@@ -97,7 +143,7 @@ public class TokenComponent {
      * 当用户信息发生改变后,更新缓存
      */
     public void updateToken(String token, SystemAdminDTO model) {
-        redisUtil.set(token, model, tokenAliveTime);
+        redisUtil.set(token, model, expire);
     }
 
 

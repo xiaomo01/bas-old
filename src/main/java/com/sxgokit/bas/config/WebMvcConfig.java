@@ -28,11 +28,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		 */
 		registry.addInterceptor(new WebServiceAuthInterceptor(tokenComponent))
 				//拦截所有请求
-				.addPathPatterns("/open/**")
-				.excludePathPatterns("login")
+				.addPathPatterns("/**")
+				.excludePathPatterns("/system/login/")
 				// 静态资源
 				.excludePathPatterns("/static/**")
 				// 开放swagger-ui相关资源
+                .excludePathPatterns("/doc.html")
 				.excludePathPatterns("/swagger-resources/**", "/webjars/**",
 						"/v2/**", "/swagger-ui.html/**");
 	}

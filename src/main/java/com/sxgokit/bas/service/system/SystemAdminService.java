@@ -2,9 +2,7 @@ package com.sxgokit.bas.service.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sxgokit.bas.common.exception.GlobalExceptionHandler;
 import com.sxgokit.bas.entity.dto.system.SystemAdminDTO;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,5 +19,10 @@ public interface SystemAdminService extends IService<SystemAdminDTO> {
 
     List<SystemAdminDTO> findPageList(IPage<SystemAdminDTO> iPage, SystemAdminDTO model);
 
+    /**
+     * 验证用户登录信息
+     * @param dto
+     * @return
+     */
     SystemAdminDTO login(SystemAdminDTO dto);
 }

@@ -1,5 +1,7 @@
 package com.sxgokit.bas.base;
 
+import com.sxgokit.bas.common.exception.BizException;
+import io.jsonwebtoken.Claims;
 import lombok.Data;
 import java.io.IOException;
 import cn.hutool.json.JSONUtil;
@@ -49,23 +51,21 @@ public class WebServiceAuthInterceptor extends HandlerInterceptorAdapter {
         }else if(annotationForController != null && annotationForController.value() ){
             return true;
         } else {
-            String authToken = request.getHeader(HEAD_AUTH_TOKEN);
-            if (StringUtils.isEmpty(authToken)) {
-                authToken = this.parseTokenFromRequest(request);
+            // Token 验证
+            String token = request.getHeader(tokenComponent.getHeader());
+            if(org.springframework.util.StringUtils.isEmpty(token)){
+                token = request.getParameter(tokenComponent.getHeader());
             }
-            if (tokenComponent.checkToken(authToken)) {
-                tokenComponent.keepaliveToken(authToken);
-                return true;
-            } else {
-                try {
-                    response.setCharacterEncoding("UTF-8");
-                    response.setContentType("application/json");
-                    response.getWriter().write(JSONUtil.parse(ResultBody.error(ResultCommonEnum.SIGNATURE_NOT_MATCH)).toString());
-                } catch (IOException e) {
-                    log.error("Write No Auth message exception.", e);
-                }
-                return false;
+            if(org.springframework.util.StringUtils.isEmpty(token)){
+                throw new BizException(ResultCommonEnum.NO_TOKEN);
             }
+            Claims claims = tokenComponent.getTokenClaim(token);
+            if(claims == null || tokenComponent.isTokenExpired(claims.getExpiration())){
+                throw new BizException(ResultCommonEnum.TOKEN_TIMEOUT);
+            }
+            //设置 userId 用户身份ID
+            request.setAttribute("userId", claims.getSubject());
+            return true;
         }
     }
 }

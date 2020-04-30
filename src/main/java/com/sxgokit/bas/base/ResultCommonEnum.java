@@ -18,7 +18,13 @@ public enum ResultCommonEnum implements ExceptionBaseErrorInfoInterface {
     NOT_FOUND("404", "未找到该资源!"),
     INTERNAL_SERVER_ERROR("500", "服务器内部错误!"),
     SERVER_BUSY("503", "服务器正忙，请稍后再试!"),
-    REQUEST_METHOD_SUPPORT_ERROR("40001","当前请求方法不支持");
+    REQUEST_METHOD_SUPPORT_ERROR("40001","当前请求方法不支持"),
+
+    //业务异常编码
+    NO_TOKEN("10001", "请求中未获取到token！"),
+    TOKEN_TIMEOUT("10002", "请求中token失效，需重新登录！");
+
+
     /**
      * 错误码
      */
