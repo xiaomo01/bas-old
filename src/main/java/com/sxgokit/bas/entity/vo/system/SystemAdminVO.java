@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author dukang
@@ -20,70 +21,42 @@ import java.util.Date;
 public class SystemAdminVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-    private Long id;
+    @ApiModelProperty(value = "用户ID", name = "adminId", example = "test_adminId")
+    private Long adminId;
 
+    @ApiModelProperty(value = "用户登录token", name = "token", example = "test_token")
     private String token;
 
-    /**
-     * 管理员名称
-     */
+    @ApiModelProperty(value = "用户名称", name = "adminName", example = "test_adminName")
     private String adminName;
 
-    /**
-     * 登录名称
-     */
+    @ApiModelProperty(value = "登录名称", name = "loginName", example = "test_loginName")
     private String loginName;
 
-    /**
-     * 管理员状态
-     */
-    private Integer adminState;
-
-    /**
-     * 排序号(升序)
-     */
-    private Integer sortNum;
-    /**
-     * 头像路径
-     */
+    @ApiModelProperty(value = "头像路径", name = "headImagePath", example = "test_headImagePath")
     private String headImagePath;
 
-    /**
-     * 联系方式
-     */
+    @ApiModelProperty(value = "联系方式", name = "adminPhone", example = "test_adminPhone")
     private String adminPhone;
 
-    /**
-     * 身份证号
-     */
-    private String adminCardNo;
-
-    /**
-     * 性别
-     */
+    @ApiModelProperty(value = "性别", name = "adminSex", example = "test_adminSex")
     private Integer adminSex;
 
-    /**
-     * 年龄
-     */
+    @ApiModelProperty(value = "年龄", name = "adminAge", example = "test_adminAge")
     private Integer adminAge;
 
-    /**
-     * 地址
-     */
+    @ApiModelProperty(value = "地址", name = "adminAddress", example = "test_adminAddress")
     private String adminAddress;
 
-    /**
-     * 备注
-     */
+    @ApiModelProperty(value = "备注", name = "remark", example = "test_remark")
     private String remark;
 
-    /**
-     * 用户关联组织机构ID数组
-     */
-    @ApiModelProperty(value="用户关联组织机构ID数组", name="orgIdArray", example="test_orgIdArray")
+    @ApiModelProperty(value="用户关联组织机构ID数组", name="orgIdArray")
     private Long[] orgIdArray;
+
+    @ApiModelProperty(value="用户包含角色ID数组", name="orgIdArray")
+    private Long[] roleIdArray;
+
+    @ApiModelProperty(value="菜单权限集合", name="orgIdArray")
+    private List<SystemPermissionVO> permissionVOList;
 }

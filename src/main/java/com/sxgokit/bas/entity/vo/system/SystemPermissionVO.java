@@ -1,6 +1,8 @@
 package com.sxgokit.bas.entity.vo.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,6 +16,7 @@ import java.util.List;
  * @Version: 1.0
  */
 @Data
+@ApiModel(value="systemPermission对象",description="菜单权限信息")
 public class SystemPermissionVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,46 +24,55 @@ public class SystemPermissionVO implements Serializable {
     /**
      * 主键
      */
+    @ApiModelProperty(value = "主键", example = "test_id")
     private Long id;
 
     /**
      * 名称
      */
+    @ApiModelProperty(value = "菜单名称", example = "test_permissionName")
     private String permissionName;
 
     /**
      * 上级编码
      */
+    @ApiModelProperty(value = "上级编码", example = "test_permissionParentId")
     private Long permissionParentId;
 
     /**
      * 级别编码
      */
+    @ApiModelProperty(value = "级别编码", example = "test_permissionGrade")
     private Integer permissionGrade;
 
     /**
      * 类型（菜单、功能）
      */
+    @ApiModelProperty(value = "菜单类型", example = "test_permissionType")
     private Integer permissionType;
 
     /**
      * 是否底层菜单（用于判断是否可添加下级菜单）
      */
+    @ApiModelProperty(value = "是否底层菜单", example = "test_lastFlag")
     private Integer lastFlag;
 
     /**
      * 菜单链接
      */
+    @ApiModelProperty(value = "菜单链接", example = "test_permissionUrl")
     private String permissionUrl;
 
     /**
      * 所有功能编码
      */
+    @ApiModelProperty(value = "所有功能编码", example = "test_allPermissionIds")
     private String allPermissionIds;
 
     /**
      * 排序号(升序)
      */
+    @ApiModelProperty(value = "排序号(升序)", example = "test_sortNum")
     private Integer sortNum;
 
     /**

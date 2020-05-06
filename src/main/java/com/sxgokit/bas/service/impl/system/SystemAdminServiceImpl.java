@@ -1,14 +1,21 @@
 package com.sxgokit.bas.service.impl.system;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sxgokit.bas.base.DataPool;
 import com.sxgokit.bas.entity.dto.system.SystemAdminDTO;
 import com.sxgokit.bas.entity.dto.system.SystemAdminOrgRelationDTO;
+import com.sxgokit.bas.entity.dto.system.SystemOrgRoleRelationDTO;
+import com.sxgokit.bas.entity.vo.system.SystemAdminVO;
+import com.sxgokit.bas.entity.vo.system.SystemPermissionVO;
 import com.sxgokit.bas.mapper.system.SystemAdminMapper;
 import com.sxgokit.bas.mapper.system.SystemAdminOrgRelationMapper;
+import com.sxgokit.bas.mapper.system.SystemOrgRoleRelationMapper;
+import com.sxgokit.bas.mapper.system.SystemPermissionMapper;
 import com.sxgokit.bas.service.system.SystemAdminService;
+import com.sxgokit.bas.util.iterables.Iterables;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +44,18 @@ public class SystemAdminServiceImpl extends ServiceImpl<SystemAdminMapper, Syste
     @Autowired
     private SystemAdminOrgRelationMapper systemAdminOrgRelationMapper;
 
+    /**
+     * 组织机构与角色关系Mapper
+     */
+    @Autowired
+    private SystemOrgRoleRelationMapper systemOrgRoleRelationMapper;
+
+    /**
+     * 菜单权限Mapper
+     */
+    @Autowired
+    private SystemPermissionMapper systemPermissionMapper;
+
     @Override
     public boolean saveAdminInfo(SystemAdminDTO dto) throws Exception{
         //针对用户密码进行加密处理，如用户未设置密码，则保存初始化默认密码
@@ -45,12 +64,7 @@ public class SystemAdminServiceImpl extends ServiceImpl<SystemAdminMapper, Syste
         }else{
             dto.setLoginPass(DataPool.LOGIN_PASS);
         }
-        boolean result;
-        if(dto.getId() != null){
-            result = baseMapper.updateById(dto) == 1 ? true : false;
-        }else{
-            result = baseMapper.insert(dto) == 1 ? true : false;
-        }
+        boolean result = dto.getId() == null ? (baseMapper.updateById(dto) == 1 ? true : false) : (baseMapper.insert(dto) == 1 ? true : false);
         //保存用户与组织机构关联信息
         if(dto.getOrgIdArray() != null && dto.getOrgIdArray().length > 0){
             //清除原用户与组织机构关联信息
@@ -89,7 +103,34 @@ public class SystemAdminServiceImpl extends ServiceImpl<SystemAdminMapper, Syste
         queryWrapper.eq("login_name", dto.getLoginName());
         queryWrapper.eq("login_pass", dto.getLoginPass());
         queryWrapper.eq("admin_state", dto.getAdminState());
-        //queryWrapper.eq("del_flag", 0);
         return baseMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public SystemAdminVO getAdminInfoById(Long id) {
+        return baseMapper.getAdminInfoById(id);
+    }
+
+    @Override
+    public Long[] getOrgIdArrayById(Long id) {
+        return baseMapper.getOrgIdArrayById(id);
+    }
+
+    @Override
+    public Long[] getRoleIdArrayById(Long[] orgIdArray) {
+        QueryWrapper<SystemOrgRoleRelationDTO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("org_id",orgIdArray);
+        List<SystemOrgRoleRelationDTO> list = systemOrgRoleRelationMapper.selectList(queryWrapper);
+        if(CollectionUtil.isNotEmpty(list)){
+            Long[] roleIdArray = new Long[list.size()];
+            Iterables.forEach(list, (index, dto) -> roleIdArray[index] = dto.getRoleId());
+            return roleIdArray;
+        }
+        return null;
+    }
+
+    @Override
+    public List<SystemPermissionVO> getPermissonListByRole(Long[] roleIdArray) {
+        return systemPermissionMapper.getPermissonListByRole(roleIdArray);
     }
 }

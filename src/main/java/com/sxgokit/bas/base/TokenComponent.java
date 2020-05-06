@@ -2,6 +2,7 @@ package com.sxgokit.bas.base;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.sxgokit.bas.entity.dto.system.SystemAdminDTO;
+import com.sxgokit.bas.entity.vo.system.SystemAdminVO;
 import com.sxgokit.bas.util.redis.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,18 +43,18 @@ public class TokenComponent {
      * @param identityId
      * @return
      */
-    public String createToken(SystemAdminDTO adminDTO) {
+    public String createToken(SystemAdminVO adminVO) {
         Date nowDate = new Date();
         //过期时间
         Date expireDate = new Date(nowDate.getTime() + expire * 1000);
         String token = Jwts.builder()
                 .setHeaderParam("type", "JWT")
-                .setSubject(adminDTO.getId().toString())
+                .setSubject(adminVO.getAdminId().toString())
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
-        redisUtil.set(token, adminDTO, expire);
+        redisUtil.set(token, adminVO, expire);
         return token;
     }
 

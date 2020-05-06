@@ -65,4 +65,7 @@ public class SystemAdminDTO extends BaseEntity {
     @ApiModelProperty(value="更新用户", hidden = true)
     private Long updateUser;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value="用户关联组织机构ID数组", name="orgIdArray", hidden = true)
+    private Long[] orgIdArray;
 }
