@@ -46,6 +46,11 @@ public class SystemLoginController extends BaseController {
         if(model == null){
             return ResultBody.error("登录失败！请重新验证用户名与密码！");
         }else{
+            //组装VO
+            //获取用户信息，获取用户所属组织机构信息
+            //返回vo，根据用户id，获取组织机构ids，去重获取所有本级及下级ids
+            //获取roles
+            //根据ids，获取所有permisson，去重获取所有
             JSONObject json = new JSONObject();
             String token = tokenComponent.createToken(model);
             json.put("token",token) ;

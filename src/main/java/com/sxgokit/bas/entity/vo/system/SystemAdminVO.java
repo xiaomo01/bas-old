@@ -1,5 +1,8 @@
 package com.sxgokit.bas.entity.vo.system;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,6 +16,7 @@ import java.util.Date;
  * @createTime 2019年12月26日 11:28:00
  */
 @Data
+@ApiModel(value="systemAdmin对象",description="用户信息")
 public class SystemAdminVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -20,6 +24,8 @@ public class SystemAdminVO implements Serializable {
      * 主键
      */
     private Long id;
+
+    private String token;
 
     /**
      * 管理员名称
@@ -30,11 +36,6 @@ public class SystemAdminVO implements Serializable {
      * 登录名称
      */
     private String loginName;
-
-    /**
-     * 登录密码
-     */
-    private String loginPass;
 
     /**
      * 管理员状态
@@ -79,4 +80,10 @@ public class SystemAdminVO implements Serializable {
      * 备注
      */
     private String remark;
+
+    /**
+     * 用户关联组织机构ID数组
+     */
+    @ApiModelProperty(value="用户关联组织机构ID数组", name="orgIdArray", example="test_orgIdArray")
+    private Long[] orgIdArray;
 }
